@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MitteilungsService" targetNamespace="http://www.ear-system.de/ear-soap/v2"
+                  xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://www.ear-system.de/ear-soap/v2" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+                   targetNamespace="http://www.ear-system.de/ear-soap/v2"
+                   xmlns:ear="http://www.ear-system.de/ear-soap/v2" xmlns:tns="http://www.ear-system.de/ear-soap/v2"
+                   xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:element name="checkRegistrierungsnummer" type="ear:checkRegistrierungsnummer"/>
+            <xs:element name="checkRegistrierungsnummerResponse" type="ear:checkRegistrierungsnummerResponse"/>
+            <xs:element name="getGeraetearten" type="ear:getGeraetearten"/>
+            <xs:element name="getGeraeteartenResponse" type="ear:getGeraeteartenResponse"/>
+            <xs:element name="isAlive" type="ear:isAlive"/>
+            <xs:element name="isAliveResponse" type="ear:isAliveResponse"/>
+            <xs:element name="submitEigenruecknahme" type="ear:submitEigenruecknahme"/>
+            <xs:element name="submitEigenruecknahmeAnrechnungAHK" type="ear:submitEigenruecknahmeAnrechnungAHK"/>
+            <xs:element name="submitEigenruecknahmeAnrechnungAHKResponse"
+                        type="ear:submitEigenruecknahmeAnrechnungAHKResponse"/>
+            <xs:element name="submitEigenruecknahmeResponse" type="ear:submitEigenruecknahmeResponse"/>
+            <xs:element name="submitIstInput" type="ear:submitIstInput"/>
+            <xs:element name="submitIstInputResponse" type="ear:submitIstInputResponse"/>
+            <xs:element name="submitIstOutput" type="ear:submitIstOutput"/>
+            <xs:element name="submitIstOutputResponse" type="ear:submitIstOutputResponse"/>
+            <xs:element name="submitMittelbarerExport" type="ear:submitMittelbarerExport"/>
+            <xs:element name="submitMittelbarerExportResponse" type="ear:submitMittelbarerExportResponse"/>
+            <xs:complexType name="submitEigenruecknahmeAnrechnungAHK">
+                <xs:sequence>
+                    <xs:element name="menge" type="xs:decimal"/>
+                    <xs:element name="einheit" type="ear:Masseinheit"/>
+                    <xs:element name="jahr" type="xs:int"/>
+                    <xs:element name="monat" type="xs:int"/>
+                    <xs:element name="geraeteartnummer" type="xs:int"/>
+                    <xs:element name="registrierungsnummer" type="xs:int"/>
+                    <xs:element name="nachweis" type="xs:base64Binary"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitEigenruecknahmeAnrechnungAHKResponse">
+                <xs:sequence>
+                    <xs:element name="standardResponse" type="ear:StandardResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="StandardResponse">
+                <xs:sequence>
+                    <xs:element name="code" type="xs:int"/>
+                    <xs:element name="text" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceFault">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="checkRegistrierungsnummer">
+                <xs:sequence>
+                    <xs:element name="registrierungsnummer" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="checkRegistrierungsnummerResponse">
+                <xs:sequence>
+                    <xs:element name="standardResponse" type="ear:StandardResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitIstOutput">
+                <xs:sequence>
+                    <xs:element name="menge" type="xs:decimal"/>
+                    <xs:element name="einheit" type="ear:Masseinheit"/>
+                    <xs:element name="codeId" type="xs:string"/>
+                    <xs:element name="wgKfz" type="xs:string"/>
+                    <xs:element name="wgNumber" type="xs:string"/>
+                    <xs:element name="registrierungsnummer" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitIstOutputResponse">
+                <xs:sequence>
+                    <xs:element name="standardResponse" type="ear:StandardResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getGeraetearten">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="getGeraeteartenResponse">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="geraeteart" type="ear:Geraeteart"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Geraeteart">
+                <xs:sequence>
+                    <xs:element name="nummer" type="xs:int"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element minOccurs="0" name="gruppe" nillable="true" type="ear:Gruppe"/>
+                    <xs:element name="kategorie" type="ear:Kategorie"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Gruppe">
+                <xs:sequence>
+                    <xs:element name="nummer" type="xs:int"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Kategorie">
+                <xs:sequence>
+                    <xs:element name="nummer" type="xs:int"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitEigenruecknahme">
+                <xs:sequence>
+                    <xs:element name="menge" type="xs:decimal"/>
+                    <xs:element name="einheit" type="ear:Masseinheit"/>
+                    <xs:element name="jahr" type="xs:int"/>
+                    <xs:element name="monat" type="xs:int"/>
+                    <xs:element name="geraeteartnummer" type="xs:int"/>
+                    <xs:element name="registrierungsnummer" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitEigenruecknahmeResponse">
+                <xs:sequence>
+                    <xs:element name="standardResponse" type="ear:StandardResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="isAlive">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="isAliveResponse">
+                <xs:sequence>
+                    <xs:element name="standardResponse" type="ear:StandardResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitIstInput">
+                <xs:sequence>
+                    <xs:element name="menge" type="xs:decimal"/>
+                    <xs:element name="einheit" type="ear:Masseinheit"/>
+                    <xs:element name="jahr" type="xs:int"/>
+                    <xs:element name="monat" type="xs:int"/>
+                    <xs:element name="geraeteartnummer" type="xs:int"/>
+                    <xs:element name="registrierungsnummer" type="xs:int"/>
+                    <xs:element name="wahrheitserklaerung" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitIstInputResponse">
+                <xs:sequence>
+                    <xs:element name="standardResponse" type="ear:StandardResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitMittelbarerExport">
+                <xs:sequence>
+                    <xs:element name="menge" type="xs:decimal"/>
+                    <xs:element minOccurs="0" name="anteilGebrauchtgeraete" nillable="true" type="xs:decimal"/>
+                    <xs:element name="einheit" type="ear:Masseinheit"/>
+                    <xs:element name="jahr" type="xs:int"/>
+                    <xs:element name="monat" type="xs:int"/>
+                    <xs:element name="geraeteartnummer" type="xs:int"/>
+                    <xs:element name="registrierungsnummer" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="submitMittelbarerExportResponse">
+                <xs:sequence>
+                    <xs:element name="standardResponse" type="ear:StandardResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="Masseinheit">
+                <xs:restriction base="xs:int">
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="2"/>
+                    <xs:enumeration value="3"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ServiceFault" nillable="true" type="ear:ServiceFault"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="isAliveResponse">
+        <wsdl:part element="tns:isAliveResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getGeraetearten">
+        <wsdl:part element="tns:getGeraetearten" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitIstInputResponse">
+        <wsdl:part element="tns:submitIstInputResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="checkRegistrierungsnummer">
+        <wsdl:part element="tns:checkRegistrierungsnummer" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitMittelbarerExportResponse">
+        <wsdl:part element="tns:submitMittelbarerExportResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getGeraeteartenResponse">
+        <wsdl:part element="tns:getGeraeteartenResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitEigenruecknahmeAnrechnungAHKResponse">
+        <wsdl:part element="tns:submitEigenruecknahmeAnrechnungAHKResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitMittelbarerExport">
+        <wsdl:part element="tns:submitMittelbarerExport" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitEigenruecknahmeResponse">
+        <wsdl:part element="tns:submitEigenruecknahmeResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="checkRegistrierungsnummerResponse">
+        <wsdl:part element="tns:checkRegistrierungsnummerResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitIstOutputResponse">
+        <wsdl:part element="tns:submitIstOutputResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="isAlive">
+        <wsdl:part element="tns:isAlive" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="ServiceException">
+        <wsdl:part element="tns:ServiceFault" name="ServiceException">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitIstOutput">
+        <wsdl:part element="tns:submitIstOutput" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitEigenruecknahmeAnrechnungAHK">
+        <wsdl:part element="tns:submitEigenruecknahmeAnrechnungAHK" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitEigenruecknahme">
+        <wsdl:part element="tns:submitEigenruecknahme" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="submitIstInput">
+        <wsdl:part element="tns:submitIstInput" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="MitteilungsServicePort">
+        <wsdl:operation name="submitEigenruecknahmeAnrechnungAHK">
+            <wsdl:input message="tns:submitEigenruecknahmeAnrechnungAHK" name="submitEigenruecknahmeAnrechnungAHK">
+            </wsdl:input>
+            <wsdl:output message="tns:submitEigenruecknahmeAnrechnungAHKResponse"
+                         name="submitEigenruecknahmeAnrechnungAHKResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="checkRegistrierungsnummer">
+            <wsdl:input message="tns:checkRegistrierungsnummer" name="checkRegistrierungsnummer">
+            </wsdl:input>
+            <wsdl:output message="tns:checkRegistrierungsnummerResponse" name="checkRegistrierungsnummerResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitIstOutput">
+            <wsdl:input message="tns:submitIstOutput" name="submitIstOutput">
+            </wsdl:input>
+            <wsdl:output message="tns:submitIstOutputResponse" name="submitIstOutputResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getGeraetearten">
+            <wsdl:input message="tns:getGeraetearten" name="getGeraetearten">
+            </wsdl:input>
+            <wsdl:output message="tns:getGeraeteartenResponse" name="getGeraeteartenResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitEigenruecknahme">
+            <wsdl:input message="tns:submitEigenruecknahme" name="submitEigenruecknahme">
+            </wsdl:input>
+            <wsdl:output message="tns:submitEigenruecknahmeResponse" name="submitEigenruecknahmeResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isAlive">
+            <wsdl:input message="tns:isAlive" name="isAlive">
+            </wsdl:input>
+            <wsdl:output message="tns:isAliveResponse" name="isAliveResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitIstInput">
+            <wsdl:input message="tns:submitIstInput" name="submitIstInput">
+            </wsdl:input>
+            <wsdl:output message="tns:submitIstInputResponse" name="submitIstInputResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitMittelbarerExport">
+            <wsdl:input message="tns:submitMittelbarerExport" name="submitMittelbarerExport">
+            </wsdl:input>
+            <wsdl:output message="tns:submitMittelbarerExportResponse" name="submitMittelbarerExportResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:ServiceException" name="ServiceException">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MitteilungsServiceSoapBinding" type="tns:MitteilungsServicePort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="submitEigenruecknahmeAnrechnungAHK">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="submitEigenruecknahmeAnrechnungAHK">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="submitEigenruecknahmeAnrechnungAHKResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="checkRegistrierungsnummer">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="checkRegistrierungsnummer">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="checkRegistrierungsnummerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitIstOutput">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="submitIstOutput">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="submitIstOutputResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getGeraetearten">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getGeraetearten">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getGeraeteartenResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitEigenruecknahme">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="submitEigenruecknahme">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="submitEigenruecknahmeResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isAlive">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="isAlive">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="isAliveResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitIstInput">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="submitIstInput">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="submitIstInputResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="submitMittelbarerExport">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="submitMittelbarerExport">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="submitMittelbarerExportResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MitteilungsService">
+        <wsdl:port binding="tns:MitteilungsServiceSoapBinding" name="MitteilungsServicePort">
+            <soap:address location="https://test.ear-system.de/ear-soap/v2/MitteilungsService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

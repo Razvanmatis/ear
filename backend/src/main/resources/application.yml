@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/eardb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  h2:
+    console:
+      enabled: true
+
+ear:
+  soap:
+    endpoint: https://test.ear-system.de/ear-soap/v2/MitteilungsService

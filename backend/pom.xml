@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>de.ear</groupId>
+    <artifactId>mengenabgaben</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>mengenabgaben</name>
+    <description>REST, H2, SOAP client and tests</description>
+
+    <properties>
+        <java.version>25</java.version>
+        <jaxws.version>4.0.3</jaxws.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- REST API mit Spring MVC -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+
+        <!-- Persistenz mit JPA / Hibernate -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Jakarta für openAPI processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- In-Memory-Datenbank -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-h2console</artifactId>
+        </dependency>
+
+        <!-- SOAP-Client: Jakarta XML Web Services / Metro -->
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>${jaxws.version}</version>
+        </dependency>
+
+        <!-- Unit- und Integrationstests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Lombok für automatische boilerplate code-generierung-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Mapping von Entities zu DTO und zurück-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- wsimport: Java-Klassen aus der WSDL generieren -->
+            <plugin>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>${jaxws.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>generate-soap-client</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <wsdlDirectory>
+                        ${project.basedir}/src/main/resources/wsdl
+                    </wsdlDirectory>
+                    <wsdlFiles>
+                        <wsdlFile>MitteilungsService.xml</wsdlFile>
+                    </wsdlFiles>
+                    <packageName>
+                        de.ear.soap.generated
+                    </packageName>
+                    <sourceDestDir>
+                        ${project.build.directory}/generated-sources/wsimport
+                    </sourceDestDir>
+                    <keep>true</keep>
+                </configuration>
+            </plugin>
+
+            <!-- Ausführbare Spring-Boot-Anwendung bauen -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.openapiprocessor</groupId>
+                <artifactId>openapi-processor-maven-plugin</artifactId>
+                <version>2026.1</version>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>io.openapiprocessor</groupId>
+                        <artifactId>openapi-processor-spring</artifactId>
+                        <version>2026.2</version>
+                    </dependency>
+                </dependencies>
+
+                <executions>
+                    <execution>
+                        <id>generate-openapi</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <id>spring</id>
+                            <apiPath>
+                                ${project.basedir}/src/main/resources/openapi.yaml
+                            </apiPath>
+                            <options>
+                                <values>
+                                    <targetDir>
+                                        ${project.build.directory}/generated-sources/openapi
+                                    </targetDir>
+                                    <mapping>
+                                        ${project.basedir}/src/main/resources/mapping.yaml
+                                    </mapping>
+                                </values>
+                            </options>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,12 @@
+
+openapi-processor-mapping: v17
+
+options:
+  package-name: de.ear
+  model-type: class
+  bean-validation: jakarta
+  javadoc: true
+
+map:
+  types:
+    - type: number:decimal => java.math.BigDecimal

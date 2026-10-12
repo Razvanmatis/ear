@@ -1,0 +1,241 @@
+openapi: 3.1.0
+
+info:
+  title: EAR Mengenabgaben API
+  version: 1.0.0
+  description: REST API zur Verwaltung von Mengenabgaben
+
+servers:
+  - url: http://localhost:8080
+    description: Lokale Entwicklungsumgebung
+
+tags:
+  - name: Mengenabgaben
+    description: Verwaltung von Mengenabgaben
+
+paths:
+  /geraetearten:
+    get:
+      tags:
+        - Geraetearten
+      summary: Alle verfügbaren Gerätearten ermitteln
+      operationId: getGeraetearten
+      responses:
+        '200':
+          description: Liste aller Geraetearten
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Geraeteart'
+
+  /mengenabgaben:
+    post:
+      tags:
+        - Mengenabgaben
+      summary: Neue Mengenabgabe übermitteln
+      operationId: createMengenabgabe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MengenabgabeRequest'
+      responses:
+        '201':
+          description: Mengenabgabe erfolgreich angelegt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mengenabgabe'
+        '400':
+          description: Ungültige Eingabedaten
+        '502':
+          description: Fehler bei der Kommunikation mit dem SOAP-Service
+
+    get:
+      tags:
+        - Mengenabgaben
+      summary: Alle Mengenabgaben paginiert abrufen
+      operationId: getMengenabgaben
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Seitennummer, beginnend bei 0
+
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Anzahl der Datensätze pro Seite
+
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: Sortierung, z. B. jahr,desc
+      responses:
+        '200':
+          description: Paginierte Mengenabgaben
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MengenabgabePage'
+
+components:
+  schemas:
+    MengenabgabeRequest:
+      type: object
+      description: Eingabedaten für eine Mengenabgabe
+      required:
+        - menge
+        - einheit
+        - jahr
+        - monat
+        - geraeteartnummer
+        - registrierungsnummer
+        - wahrheitserklaerung
+      properties:
+        menge:
+          type: number
+          format: decimal
+          description: Abgegebene Menge
+          example: 125.50
+        einheit:
+          type: integer
+          enum: [1, 2, 3]
+          description: Mengeneinheit gemäß SOAP-Schnittstelle
+          example: 1
+        jahr:
+          type: integer
+          format: int32
+          example: 2026
+        monat:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+          example: 9
+        geraeteartnummer:
+          type: integer
+          format: int32
+          example: 16
+        registrierungsnummer:
+          type: integer
+          format: int32
+          example: 12345678
+        wahrheitserklaerung:
+          type: boolean
+          description: Bestätigung der Wahrheitserklärung
+          example: true
+
+    MengenabgabePage:
+      type: object
+      required:
+        - content
+        - page
+        - size
+        - totalElements
+        - totalPages
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mengenabgabe'
+        page:
+          type: integer
+          description: Aktuelle Seitennummer, beginnend bei 0
+        size:
+          type: integer
+          description: Angeforderte Seitengröße
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+
+    Mengenabgabe:
+      type: object
+      description: Eine gespeicherte Mengenabgabe
+      required:
+        - id
+        - menge
+        - einheit
+        - jahr
+        - monat
+        - geraeteartnummer
+        - registrierungsnummer
+        - wahrheitserklaerung
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Eindeutige interne ID
+          readOnly: true
+          example: 1
+        menge:
+          type: number
+          format: decimal
+          example: 125.50
+        einheit:
+          type: integer
+          enum: [1, 2, 3]
+          example: 1
+        jahr:
+          type: integer
+          format: int32
+          example: 2026
+        monat:
+          type: integer
+          format: int32
+          example: 9
+        geraeteartnummer:
+          type: integer
+          format: int32
+          example: 16
+        registrierungsnummer:
+          type: integer
+          format: int32
+          example: 12345678
+        wahrheitserklaerung:
+          type: boolean
+          description: Bestätigung der Wahrheitserklärung
+          example: true
+
+    Geraeteart:
+      type: object
+      description: Eine Geräteart
+      required:
+        - nummer
+        - name
+        - gruppe
+        - kategorie
+      properties:
+        nummer:
+          type: integer
+          format: int32
+          example: 32
+        name:
+          type: string
+          example: Lampen
+        gruppe:
+          type: string
+          example: Lampen
+        kategorie:
+          type: string
+          example: Lampen
