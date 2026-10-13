@@ -14,7 +14,14 @@ public class SoapClientConfiguration {
     @Bean
     public MitteilungsServicePort mitteilungsServicePort(
             @Value("${ear.soap.endpoint}") String endpoint) {
-        MitteilungsService service = new MitteilungsService();
+        var wsdlLocation = MitteilungsService.class
+                .getResource("/wsdl/MitteilungsService.xml");
+        if (wsdlLocation == null) {
+            throw new IllegalStateException(
+                    "WSDL resource /wsdl/MitteilungsService.xml was not found");
+        }
+
+        MitteilungsService service = new MitteilungsService(wsdlLocation);
         MitteilungsServicePort port =
                 service.getMitteilungsServicePort();
         BindingProvider bindingProvider = (BindingProvider) port;
