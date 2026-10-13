@@ -87,9 +87,9 @@ export class Mengenabgabe implements OnInit {
   protected readonly geraeteartenError = signal('');
 
   protected readonly einheiten = [
-    { wert: 1, bezeichnung: 'Einheit 1' },
-    { wert: 2, bezeichnung: 'Einheit 2' },
-    { wert: 3, bezeichnung: 'Einheit 3' },
+    { wert: 1, bezeichnung: 'Kilogramm' },
+    { wert: 2, bezeichnung: 'Stück' },
+    { wert: 3, bezeichnung: 'Tonnen' },
   ] as const;
 
   readonly form: MengenabgabeForm = new FormGroup({
