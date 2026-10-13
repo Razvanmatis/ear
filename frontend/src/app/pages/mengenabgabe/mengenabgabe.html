@@ -1,0 +1,149 @@
+<main class="page">
+  <header class="page__header">
+    <div class="page__eyebrow">Mengenverwaltung</div>
+    <h1>Mengenabgabe</h1>
+    <p>Erfassen Sie die Angaben und bestätigen Sie die Wahrheitserklärung.</p>
+  </header>
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Menge</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="any"
+          formControlName="menge"
+          placeholder="z. B. 125,5"
+        />
+        <mat-hint>Geben Sie die abgegebene Menge ein.</mat-hint>
+        @if (form.controls.menge.hasError('required') && form.controls.menge.touched) {
+          <mat-error>Bitte geben Sie eine Menge ein.</mat-error>
+        } @else if (form.controls.menge.hasError('min') && form.controls.menge.touched) {
+          <mat-error>Die Menge darf nicht negativ sein.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Einheit</mat-label>
+        <mat-select formControlName="einheit">
+          @for (einheit of einheiten; track einheit.wert) {
+            <mat-option [value]="einheit.wert">{{ einheit.bezeichnung }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.einheit.hasError('required') && form.controls.einheit.touched) {
+          <mat-error>Bitte wählen Sie eine Einheit aus.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Abrechnungsmonat</mat-label>
+        <input
+          matInput
+          [matDatepicker]="periodPicker"
+          formControlName="zeitraum"
+          placeholder="Monat und Jahr auswählen"
+          readonly
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="periodPicker" />
+        <mat-datepicker
+          #periodPicker
+          startView="multi-year"
+          (monthSelected)="setMonthAndYear($event, periodPicker)"
+        />
+        @if (form.controls.zeitraum.hasError('required') && form.controls.zeitraum.touched) {
+          <mat-error>Bitte wählen Sie Monat und Jahr aus.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Geräteart</mat-label>
+        <mat-select formControlName="geraeteartnummer">
+          @for (geraeteart of geraetearten(); track geraeteart.nummer) {
+            <mat-option [value]="geraeteart.nummer">
+              {{ geraeteart.name }} ({{ geraeteart.nummer }})
+            </mat-option>
+          }
+        </mat-select>
+        @if (isLoadingGeraetearten()) {
+          <mat-hint>Gerätearten werden geladen …</mat-hint>
+        } @else if (
+          form.controls.geraeteartnummer.hasError('required') &&
+          form.controls.geraeteartnummer.touched
+        ) {
+          <mat-error>Bitte wählen Sie eine Geräteart aus.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Registrierungsnummer</mat-label>
+        <input
+          matInput
+          type="text"
+          inputmode="numeric"
+          formControlName="registrierungsnummer"
+          (input)="keepRegistrierungsnummerNumeric($event)"
+          placeholder="Registrierungsnummer"
+        />
+        @if (
+          form.controls.registrierungsnummer.hasError('required') &&
+          form.controls.registrierungsnummer.touched
+        ) {
+          <mat-error>Bitte geben Sie eine Registrierungsnummer ein.</mat-error>
+        } @else if (
+          form.controls.registrierungsnummer.hasError('pattern') &&
+          form.controls.registrierungsnummer.touched
+        ) {
+          <mat-error>Bitte geben Sie nur Ziffern ein.</mat-error>
+        } @else if (
+          form.controls.registrierungsnummer.hasError('minlength') &&
+          form.controls.registrierungsnummer.touched
+        ) {
+          <mat-error>Die Registrierungsnummer muss 8 Ziffern enthalten.</mat-error>
+        } @else if (
+          form.controls.registrierungsnummer.hasError('maxlength') &&
+          form.controls.registrierungsnummer.touched
+        ) {
+          <mat-error>Die Registrierungsnummer darf höchstens 8 Ziffern enthalten.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    @if (geraeteartenError()) {
+      <div class="form-card__load-error" role="alert">
+        <span>{{ geraeteartenError() }}</span>
+        <button mat-button type="button" (click)="loadGeraetearten()">Erneut versuchen</button>
+      </div>
+    }
+
+    <mat-checkbox class="truth-confirmation" formControlName="wahrheitserklaerung">
+      Ich bestätige, dass meine Angaben wahrheitsgemäß und vollständig sind.
+    </mat-checkbox>
+    @if (
+      form.controls.wahrheitserklaerung.hasError('required') &&
+      form.controls.wahrheitserklaerung.touched
+    ) {
+      <p class="field-error" role="alert">Bitte bestätigen Sie die Wahrheitserklärung.</p>
+    }
+
+    @if (successMessage()) {
+      <p class="form-message form-message--success" role="status">{{ successMessage() }}</p>
+    }
+    @if (errorMessage()) {
+      <p class="form-message form-message--error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    <div class="form-actions">
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid || isSubmitting() || isLoadingGeraetearten()"
+      >
+        <mat-icon>{{ isSubmitting() ? 'hourglass_top' : 'send' }}</mat-icon>
+        {{ isSubmitting() ? 'Wird übermittelt …' : 'Mengenabgabe übermitteln' }}
+      </button>
+    </div>
+  </form>
+</main>

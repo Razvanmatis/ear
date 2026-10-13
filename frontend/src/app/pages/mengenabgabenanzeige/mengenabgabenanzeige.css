@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page__header {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+}
+
+.page__header p {
+  margin: 0;
+  color: #555;
+}
+
+.page__content {
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}

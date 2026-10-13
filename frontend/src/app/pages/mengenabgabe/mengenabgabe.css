@@ -1,0 +1,115 @@
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.page__header {
+  margin-bottom: 2rem;
+}
+
+.page__eyebrow {
+  margin-bottom: 0.5rem;
+  color: var(--mat-sys-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  color: var(--mat-sys-on-surface);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 600;
+}
+
+.page__header p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.form-card {
+  display: grid;
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 1rem;
+  background: var(--mat-sys-surface-container-lowest);
+  box-shadow: var(--mat-sys-level1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+}
+
+.form-grid mat-form-field {
+  width: 100%;
+}
+
+.truth-confirmation {
+  align-items: flex-start;
+}
+
+.field-error {
+  margin: -1rem 0 0;
+  color: var(--mat-sys-error);
+  font-size: 0.75rem;
+}
+
+.form-card__load-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.form-message {
+  margin: 0;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+}
+
+.form-message--success {
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+.form-message--error {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-actions button {
+  min-height: 3rem;
+  padding-inline: 1.25rem;
+}
+
+.form-actions mat-icon {
+  margin-right: 0.35rem;
+}
+
+@media (max-width: 42rem) {
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
