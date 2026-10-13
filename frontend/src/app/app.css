@@ -74,7 +74,8 @@
   padding: 0.25rem 0.75rem;
 }
 
-.sidebar__navigation a {
+.sidebar__navigation a,
+.sidebar__navigation button {
   height: auto;
   min-height: 3rem;
   margin: 0.25rem 0;
@@ -86,24 +87,33 @@
     color 160ms ease;
 }
 
-.sidebar__navigation a .sidebar__link-label {
+.sidebar__navigation button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.sidebar__navigation a .sidebar__link-label,
+.sidebar__navigation button .sidebar__link-label {
   overflow: visible;
   text-overflow: clip;
   white-space: nowrap;
 }
 
-.sidebar__navigation a:hover {
+.sidebar__navigation a:hover,
+.sidebar__navigation button:not(:disabled):hover {
   background: var(--mat-sys-surface-container-high);
   color: var(--mat-sys-on-surface);
 }
 
-.sidebar__navigation a.sidebar__link--active {
+.sidebar__navigation a.sidebar__link--active,
+.sidebar__navigation button.sidebar__link--active {
   background: var(--mat-sys-secondary-container);
   color: var(--mat-sys-on-secondary-container);
   font-weight: 600;
 }
 
-.sidebar__navigation a.sidebar__link--active mat-icon {
+.sidebar__navigation a.sidebar__link--active mat-icon,
+.sidebar__navigation button.sidebar__link--active mat-icon {
   color: var(--mat-sys-on-secondary-container);
 }
 
@@ -111,7 +121,8 @@
   padding-inline: 0.5rem;
 }
 
-.app-layout--collapsed .sidebar__navigation a {
+.app-layout--collapsed .sidebar__navigation a,
+.app-layout--collapsed .sidebar__navigation button {
   justify-content: center;
 }
 
@@ -125,8 +136,22 @@
   align-items: center;
   justify-content: center;
   border-top: 1px solid var(--mat-sys-outline-variant);
+  padding-top: 0.5rem;
+}
+
+.sidebar__auth-button {
+  width: 100%;
+  min-height: 2.75rem;
+  border-radius: 0.75rem;
   color: var(--mat-sys-on-surface-variant);
-  font-size: 0.8rem;
+}
+
+.sidebar__auth-button mat-icon {
+  margin-right: 0.5rem;
+}
+
+.app-layout--collapsed .sidebar__auth-button mat-icon {
+  margin-right: 0;
 }
 
 .main-panel {
@@ -160,7 +185,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .app-layout,
-  .sidebar__navigation a {
+  .sidebar__navigation a,
+  .sidebar__navigation button {
     transition: none;
   }
 }

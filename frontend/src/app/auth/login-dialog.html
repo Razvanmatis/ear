@@ -1,0 +1,57 @@
+<div class="dialog-heading">
+  <span class="dialog-heading__icon" aria-hidden="true">
+    <mat-icon>lock</mat-icon>
+  </span>
+  <div>
+    <h2 mat-dialog-title>Anmelden</h2>
+    <p>Bitte geben Sie Ihre Zugangsdaten ein.</p>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content class="dialog-content">
+    <mat-form-field appearance="outline">
+      <mat-label>Benutzername</mat-label>
+      <input
+        matInput
+        autocomplete="username"
+        formControlName="username"
+        required
+      />
+      @if (form.controls.username.hasError('required') && form.controls.username.touched) {
+        <mat-error>Bitte geben Sie Ihren Benutzernamen ein.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Passwort</mat-label>
+      <input
+        matInput
+        type="password"
+        autocomplete="current-password"
+        formControlName="password"
+        required
+      />
+      @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+        <mat-error>Bitte geben Sie Ihr Passwort ein.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (errorMessage()) {
+      <p class="login-error" role="alert">{{ errorMessage() }}</p>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close [disabled]="isSubmitting()">
+      Abbrechen
+    </button>
+    <button mat-flat-button type="submit" [disabled]="form.invalid || isSubmitting()">
+      @if (isSubmitting()) {
+        Wird geprüft …
+      } @else {
+        Anmelden
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,49 @@
+.dialog-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.dialog-heading__icon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  place-items: center;
+  border-radius: 1rem;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.dialog-heading h2 {
+  margin: 0;
+}
+
+.dialog-heading p {
+  margin: 0.25rem 0 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.dialog-content {
+  display: grid;
+  gap: 0.5rem;
+  min-width: min(22rem, calc(100vw - 4rem));
+  padding-top: 1.5rem;
+}
+
+.dialog-content mat-form-field {
+  width: 100%;
+}
+
+.login-error {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+mat-dialog-actions {
+  padding: 0 1.5rem 1.5rem;
+}

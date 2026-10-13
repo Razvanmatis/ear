@@ -18,13 +18,15 @@
 
     <div class="sidebar__section-label">Arbeitsbereich</div>
     <mat-nav-list class="sidebar__navigation">
-      <a
+      <button
         mat-list-item
-        routerLink="/mengenabgabe"
+        type="button"
+        [routerLink]="authService.isAuthenticated() ? '/mengenabgabe' : null"
         routerLinkActive="sidebar__link--active"
         ariaCurrentWhenActive="page"
         aria-label="Mengenabgabe"
-        matTooltip="Mengenabgabe"
+        [disabled]="!authService.isAuthenticated()"
+        [matTooltip]="authService.isAuthenticated() ? 'Mengenabgabe' : 'Bitte zuerst anmelden'"
         [matTooltipDisabled]="sidebarExpanded()"
         matTooltipPosition="right"
       >
@@ -32,7 +34,7 @@
         @if (sidebarExpanded()) {
           <span matListItemTitle class="sidebar__link-label">Mengenabgabe</span>
         }
-      </a>
+      </button>
       <a
         mat-list-item
         routerLink="/mengenabgabenanzeige"
@@ -51,11 +53,20 @@
     </mat-nav-list>
 
     <div class="sidebar__footer">
-      @if (sidebarExpanded()) {
-        <span>Mengenverwaltung</span>
-      } @else {
-        <mat-icon aria-label="Mengenverwaltung">inventory_2</mat-icon>
-      }
+      <button
+        mat-button
+        type="button"
+        class="sidebar__auth-button"
+        [matTooltip]="authService.isAuthenticated() ? 'Abmelden' : 'Anmelden'"
+        [matTooltipDisabled]="sidebarExpanded()"
+        matTooltipPosition="right"
+        (click)="authService.isAuthenticated() ? logout() : openLoginDialog()"
+      >
+        <mat-icon>{{ authService.isAuthenticated() ? 'logout' : 'login' }}</mat-icon>
+        @if (sidebarExpanded()) {
+          <span>{{ authService.isAuthenticated() ? 'Logout' : 'Login' }}</span>
+        }
+      </button>
     </div>
   </aside>
 

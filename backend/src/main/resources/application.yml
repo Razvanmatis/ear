@@ -15,5 +15,10 @@ spring:
       enabled: true
 
 ear:
+  auth:
+    username: ${EAR_USERNAME}
+    password: ${EAR_PASSWORD}
+  cors:
+    allowed-origin: ${EAR_FRONTEND_ORIGIN:http://localhost:4200}
   soap:
     endpoint: https://test.ear-system.de/ear-soap/v2/MitteilungsService
