@@ -1,10 +1,153 @@
 <main class="page">
   <header class="page__header">
-    <h1>Mengenabgabenanzeige</h1>
-    <p>Hier finden Sie die erfassten Mengenabgaben.</p>
+    <div class="page__eyebrow">Übersicht</div>
+    <div class="page__heading-row">
+      <div>
+        <h1>Mengenabgabenanzeige</h1>
+        <p>Alle übermittelten Mengenabgaben auf einen Blick.</p>
+      </div>
+      <div class="summary-card" aria-label="Gesamtanzahl Mengenabgaben">
+        <span class="summary-card__value">{{ totalElements() }}</span>
+        <span class="summary-card__label">Einträge gesamt</span>
+      </div>
+    </div>
   </header>
 
-  <section class="page__content" aria-label="Erfasste Mengenabgaben">
-    <ng-content />
+  <section class="table-card" aria-label="Erfasste Mengenabgaben">
+    <div class="table-card__header">
+      <div>
+        <h2>Erfasste Mengenabgaben</h2>
+        <p>Spaltenüberschriften anklicken, um die Liste zu sortieren.</p>
+      </div>
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Liste aktualisieren"
+        (click)="retry()"
+        [disabled]="isLoading()"
+      >
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="error-state" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <div class="error-state__content">
+          <strong>Die Mengenabgaben konnten nicht geladen werden</strong>
+          <p>{{ errorMessage() }}</p>
+          <button mat-stroked-button type="button" (click)="retry()">
+            Erneut versuchen
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="table-container">
+        @if (isLoading()) {
+          <div class="loading-state" role="status" aria-live="polite">
+            <mat-spinner diameter="36" />
+            <span>Mengenabgaben werden geladen …</span>
+          </div>
+        }
+
+        <table
+          mat-table
+          [dataSource]="mengenabgaben()"
+          matSort
+          [matSortActive]="sortActive()"
+          [matSortDirection]="sortDirection()"
+          (matSortChange)="onSortChange($event)"
+          [class.table--loading]="isLoading()"
+        >
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="id">ID</th>
+            <td mat-cell *matCellDef="let abgabe">
+              <span class="id-chip">#{{ abgabe.id }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="zeitraum">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="jahr">Zeitraum</th>
+            <td mat-cell *matCellDef="let abgabe">
+              <span class="period">{{ formatZeitraum(abgabe) }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="menge">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="menge">Menge</th>
+            <td mat-cell *matCellDef="let abgabe">
+              <span class="quantity">{{ abgabe.menge }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="einheit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="einheit">Einheit</th>
+            <td mat-cell *matCellDef="let abgabe">
+              <span class="unit-chip">{{ einheitName(abgabe.einheit) }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="geraeteartnummer">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="geraeteartnummer">
+              Geräteart
+            </th>
+            <td mat-cell *matCellDef="let abgabe">
+              {{ geraeteartName(abgabe.geraeteartnummer) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="registrierungsnummer">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="registrierungsnummer"
+            >
+              Registrierungsnummer
+            </th>
+            <td mat-cell *matCellDef="let abgabe">
+              <span class="registration-number">{{ abgabe.registrierungsnummer }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="wahrheitserklaerung">
+            <th mat-header-cell *matHeaderCellDef>Bestätigt</th>
+            <td mat-cell *matCellDef="let abgabe">
+              <span
+                class="confirmation"
+                [class.confirmation--yes]="abgabe.wahrheitserklaerung"
+              >
+                <mat-icon aria-hidden="true">
+                  {{ abgabe.wahrheitserklaerung ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+                {{ abgabe.wahrheitserklaerung ? 'Ja' : 'Nein' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr class="mat-mdc-row empty-row" *matNoDataRow>
+            <td class="mat-mdc-cell" [attr.colspan]="displayedColumns.length">
+              <div class="empty-state">
+                <mat-icon aria-hidden="true">inbox</mat-icon>
+                <strong>Keine Mengenabgaben vorhanden</strong>
+                <span>Hier erscheinen die Abgaben, sobald sie übermittelt wurden.</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="totalElements()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[10, 20, 50]"
+        [disabled]="isLoading()"
+        showFirstLastButtons
+        aria-label="Seiten der Mengenabgaben"
+        (page)="onPageChange($event)"
+      />
+    }
   </section>
 </main>

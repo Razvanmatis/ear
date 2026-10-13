@@ -72,7 +72,13 @@ type MengenabgabeForm = FormGroup<{
 export class Mengenabgabe implements OnInit {
   private readonly geraeteartenService = inject(GeraeteartenService);
   private readonly mengenabgabenService = inject(MengenabgabenService);
+  private readonly now = new Date();
 
+  readonly maxAbrechnungsdatum = new Date(
+    this.now.getFullYear(),
+    this.now.getMonth() + 1,
+    0,
+  );
   protected readonly geraetearten = signal<Geraeteart[]>([]);
   protected readonly isLoadingGeraetearten = signal(true);
   protected readonly isSubmitting = signal(false);
@@ -137,6 +143,15 @@ export class Mengenabgabe implements OnInit {
       monthAndYear.getMonth(),
       1,
     );
+    const currentMonth = new Date(
+      this.maxAbrechnungsdatum.getFullYear(),
+      this.maxAbrechnungsdatum.getMonth(),
+      1,
+    );
+    if (selectedMonth > currentMonth) {
+      return;
+    }
+
     this.form.controls.zeitraum.setValue(selectedMonth);
     this.form.controls.zeitraum.markAsTouched();
     datepicker.close();

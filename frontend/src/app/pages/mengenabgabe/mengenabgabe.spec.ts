@@ -120,6 +120,20 @@ describe('Mengenabgabe', () => {
     ).toBe('12345678');
   });
 
+  it('should set the datepicker maximum to the last day of the current month', () => {
+    const fixture = TestBed.createComponent(Mengenabgabe);
+    fixture.detectChanges();
+    httpTestingController
+      .expectOne('http://localhost:8080/geraetearten')
+      .flush([]);
+    const today = new Date();
+    const expectedMaxDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    expect(fixture.componentInstance.maxAbrechnungsdatum.getTime()).toBe(
+      expectedMaxDate.getTime(),
+    );
+  });
+
   it('should display the backend Problem Details title and detail on submission failure', () => {
     const fixture = TestBed.createComponent(Mengenabgabe);
     fixture.detectChanges();
