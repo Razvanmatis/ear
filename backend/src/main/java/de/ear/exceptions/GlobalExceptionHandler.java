@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -86,6 +87,13 @@ public class GlobalExceptionHandler {
                 "Zuviele Anfragen aktuell",
                 ex.getMessage()
         );
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ProblemDetail handleResponseStatus(ResponseStatusException ex) {
+        HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
+        return createProblem(status, "Nicht authentifiziert",
+                ex.getReason() != null ? ex.getReason() : "Authentifizierung erforderlich");
     }
 
     @ExceptionHandler(Exception.class)
