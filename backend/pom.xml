@@ -138,6 +138,11 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>de/ear/EarMengenabgabe*</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>generate-report</id>
@@ -150,7 +155,7 @@
                                 <exclude>de/ear/soap/generated/**</exclude>
                                 <exclude>de/ear/configuration/**</exclude>
                                 <exclude>de/ear/exceptions/**</exclude>
-                                <exclude>de/ear</exclude>
+                                <exclude>de/ear/EarMengenabgabe*</exclude>
                             </excludes>
                         </configuration>
                     </execution>
