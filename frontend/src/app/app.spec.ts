@@ -50,8 +50,12 @@ describe('App', () => {
     const mengenabgabeLink = fixture.nativeElement.querySelector(
       'button[aria-label="Mengenabgabe"]',
     ) as HTMLButtonElement;
+    const loginHint = fixture.nativeElement.querySelector(
+      '#mengenabgabe-login-hint',
+    ) as HTMLElement;
 
     expect(mengenabgabeLink.disabled).toBe(true);
+    expect(loginHint.textContent).toContain('Bitte zuerst anmelden');
 
     authService.login('user', 'password').subscribe();
     httpTestingController
@@ -60,6 +64,8 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(mengenabgabeLink.disabled).toBe(false);
+    expect(fixture.nativeElement.querySelector('#mengenabgabe-login-hint'))
+      .toBeNull();
   });
 
   it('should provide only the two requested routes', () => {

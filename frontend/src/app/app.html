@@ -26,6 +26,7 @@
         ariaCurrentWhenActive="page"
         aria-label="Mengenabgabe"
         [disabled]="!authService.isAuthenticated()"
+        [attr.aria-describedby]="!authService.isAuthenticated() ? 'mengenabgabe-login-hint' : null"
         [matTooltip]="authService.isAuthenticated() ? 'Mengenabgabe' : 'Bitte zuerst anmelden'"
         [matTooltipDisabled]="sidebarExpanded()"
         matTooltipPosition="right"
@@ -35,6 +36,22 @@
           <span matListItemTitle class="sidebar__link-label">Mengenabgabe</span>
         }
       </button>
+      @if (!authService.isAuthenticated()) {
+        <div
+          id="mengenabgabe-login-hint"
+          class="sidebar__login-hint"
+          role="status"
+          aria-label="Bitte zuerst anmelden"
+          matTooltip="Bitte zuerst anmelden"
+          [matTooltipDisabled]="sidebarExpanded()"
+          matTooltipPosition="right"
+        >
+          <mat-icon aria-hidden="true">info</mat-icon>
+          @if (sidebarExpanded()) {
+            <span>Bitte zuerst anmelden</span>
+          }
+        </div>
+      }
       <a
         mat-list-item
         routerLink="/mengenabgabenanzeige"
