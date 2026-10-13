@@ -37,6 +37,17 @@ class MengenabgabeControllerUtilitiesTest {
     }
 
     @Test
+    void createSortAcceptsParametersSplitBySpringStringArrayBinding() {
+        Sort sort = MengenabgabeControllerUtilities.createSort(
+                new String[]{"menge", "desc", "jahr", "asc"});
+
+        assertAll(
+                () -> assertEquals(Sort.Direction.DESC, sort.getOrderFor("menge").getDirection()),
+                () -> assertEquals(Sort.Direction.ASC, sort.getOrderFor("jahr").getDirection())
+        );
+    }
+
+    @Test
     void createSortRejectsInvalidFields() {
         assertThrows(IllegalArgumentException.class,
                 () -> MengenabgabeControllerUtilities.createSort(new String[]{"name,asc"}));

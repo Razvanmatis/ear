@@ -29,21 +29,27 @@ public class MengenabgabeControllerUtilities {
         if (sortParameters == null || sortParameters.length == 0) {
             return Sort.unsorted();
         }
-        List<Sort.Order> orders = new ArrayList<>();
+        List<String> sortTokens = new ArrayList<>();
         for (String parameter : sortParameters) {
-            String[] parts = parameter.split(",", -1);
-            String property = parts[0].trim();
+            for (String token : parameter.split(",", -1)) {
+                sortTokens.add(token.trim());
+            }
+        }
+
+        List<Sort.Order> orders = new ArrayList<>();
+        for (int index = 0; index < sortTokens.size(); index++) {
+            String property = sortTokens.get(index);
             if (!allowedProperties.contains(property)) {
                 throw new IllegalArgumentException(
                         "Ungültiges Sortierfeld: " + property);
             }
             Sort.Direction direction = Sort.Direction.ASC;
-            if (parts.length > 1) {
-                direction = Sort.Direction.fromString(parts[1].trim());
-            }
-            if (parts.length > 2) {
-                throw new IllegalArgumentException(
-                        "Ungültiges Sortierformat: " + parameter);
+            if (index + 1 < sortTokens.size()) {
+                String next = sortTokens.get(index + 1);
+                if (next.equalsIgnoreCase("asc") || next.equalsIgnoreCase("desc")) {
+                    direction = Sort.Direction.fromString(next);
+                    index++;
+                }
             }
             orders.add(new Sort.Order(direction, property));
         }
