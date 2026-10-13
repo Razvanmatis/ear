@@ -11,7 +11,7 @@ RUN npm ci
 
 COPY openapi/openapi.yaml /openapi/openapi.yaml
 COPY frontend/ ./
-RUN npm run generate-api && npm run build
+RUN npm run generate-api && npm run build:docker
 
 FROM nginx:alpine
 

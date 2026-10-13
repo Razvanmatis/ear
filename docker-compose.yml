@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      EAR_USERNAME: ${EAR_USERNAME:?Set EAR_USERNAME in your environment}
+      EAR_PASSWORD: ${EAR_PASSWORD:?Set EAR_PASSWORD in your environment}
+      EAR_FRONTEND_ORIGIN: http://localhost:4200
+    expose:
+      - "8080"
+    volumes:
+      - backend-data:/app/data
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    networks:
+      - app-network
+
+volumes:
+  backend-data:
+
+networks:
+  app-network:

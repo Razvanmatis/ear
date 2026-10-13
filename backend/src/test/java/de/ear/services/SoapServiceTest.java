@@ -5,9 +5,16 @@ import de.ear.soap.generated.MitteilungsServicePort;
 import de.ear.soap.generated.ServiceException;
 import de.ear.soap.generated.StandardResponse;
 import jakarta.xml.ws.BindingProvider;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +27,20 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 class SoapServiceTest {
+
+    @BeforeEach
+    void bindBasicAuthRequest() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        String credentials = Base64.getEncoder()
+                .encodeToString("test:test".getBytes(StandardCharsets.UTF_8));
+        request.addHeader("Authorization", "Basic " + credentials);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    }
+
+    @AfterEach
+    void clearRequestContext() {
+        RequestContextHolder.resetRequestAttributes();
+    }
 
     @Test
     void submitIstInputSetsCredentialsAndDelegatesToPort() throws ServiceException {

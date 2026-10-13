@@ -8,8 +8,9 @@ import { provideApi } from './generated/api/provide-api';
 import { routes } from './app.routes';
 import { API_BASE_URL } from './auth/auth.service';
 import { basicAuthInterceptor } from './auth/basic-auth.interceptor';
+import { environment } from './environments/environment';
 
-const apiBaseUrl = 'http://localhost:8080';
+const apiBaseUrl = environment.backend_url;
 
 export const appConfig: ApplicationConfig = {
   providers: [

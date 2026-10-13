@@ -24,8 +24,8 @@ describe('App', () => {
         provideRouter(routes),
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: 'http://localhost:8080' },
-        provideApi('http://localhost:8080'),
+        { provide: API_BASE_URL, useValue: '/api' },
+        provideApi('/api'),
       ],
     })
       .compileComponents();
@@ -59,7 +59,7 @@ describe('App', () => {
 
     authService.login('user', 'password').subscribe();
     httpTestingController
-      .expectOne('http://localhost:8080/auth/validate')
+      .expectOne('/api/auth/validate')
       .flush(null, { status: 204, statusText: 'No Content' });
     fixture.detectChanges();
 
@@ -78,13 +78,13 @@ describe('App', () => {
   it('should navigate to the Mengenabgabe route', async () => {
     authService.login('user', 'password').subscribe();
     httpTestingController
-      .expectOne('http://localhost:8080/auth/validate')
+      .expectOne('/api/auth/validate')
       .flush(null, { status: 204, statusText: 'No Content' });
     const harness = await RouterTestingHarness.create();
 
     await harness.navigateByUrl('/mengenabgabe', Mengenabgabe);
     httpTestingController
-      .expectOne('http://localhost:8080/geraetearten')
+      .expectOne('/api/geraetearten')
       .flush([]);
 
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent)
@@ -96,7 +96,7 @@ describe('App', () => {
 
     await harness.navigateByUrl('/mengenabgabenanzeige', Mengenabgabenanzeige);
     httpTestingController
-      .expectOne((request) => request.url === 'http://localhost:8080/mengenabgaben')
+      .expectOne((request) => request.url === '/api/mengenabgaben')
       .flush({
         content: [],
         page: 0,
@@ -114,7 +114,7 @@ describe('App', () => {
 
     await harness.navigateByUrl('/mengenabgabe');
     httpTestingController
-      .expectOne((request) => request.url === 'http://localhost:8080/mengenabgaben')
+      .expectOne((request) => request.url === '/api/mengenabgaben')
       .flush({
         content: [],
         page: 0,
