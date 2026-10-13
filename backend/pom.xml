@@ -175,7 +175,7 @@
                         <configuration>
                             <id>spring</id>
                             <apiPath>
-                                ${project.basedir}/src/main/resources/openapi.yaml
+                                ${project.basedir}/../openapi/openapi.yaml
                             </apiPath>
                             <options>
                                 <values>
