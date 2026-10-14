@@ -31,11 +31,15 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: '3.9.11'
+
       - name: Build backend and run tests
         working-directory: backend
-        run: |
-          chmod +x mvnw
-          ./mvnw -B verify
+        run: mvn -B verify
+
 
   frontend-test:
     name: Frontend - Build & Tests
@@ -58,7 +62,7 @@ jobs:
 
       - name: Run frontend tests
         working-directory: frontend
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        run: npm test -- --watch=false
 
       - name: Build frontend
         working-directory: frontend
