@@ -10,6 +10,8 @@ import de.ear.soap.generated.ServiceException;
 import de.ear.soap.generated.StandardResponse;
 import de.ear.utilities.SoapConcurrencyGuard;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MengenabgabeService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MengenabgabeService.class);
     private static final String MITTEILUNG_WURDE_ERFOLGREICH_UEBERMITTELT = "Mitteilung wurde erfolgreich übermittelt";
     private static final int LENGTH_REGISTRIERUNGSNUMMER = 8;
     private final MengenabgabeRepository repository;
@@ -46,15 +49,18 @@ public class MengenabgabeService {
 
     private void validateRequest(MengenabgabeRequest body) {
         if (body.getRegistrierungsnummer().toString().length() != LENGTH_REGISTRIERUNGSNUMMER) {
+            LOGGER.error("Registrierungsnummer hat falsche Länge.");
             throw new RegistrierungsnummerHasWrongLengthException();
         }
         if (geraeteartenService.geraeteartnummerDoesNotExist(body.getGeraeteartnummer())) {
+            LOGGER.error("Geraeteartnummer {} existiert nicht.", body.getGeraeteartnummer());
             throw new GeraeteartnummerDoesNotExistException(geraeteartenService.getExistingGerateartnummern());
         }
     }
 
     private void sendMengenabgabeSoapRequest(MengenabgabeRequest body) {
         if (!soapConcurrencyGuard.tryAcquire()) {
+            LOGGER.error("SOAP Service ist überlastet. Bitte versuchen Sie es später erneut.");
             throw new ServiceOverloadedException();
         }
         try {
@@ -68,12 +74,15 @@ public class MengenabgabeService {
                     body.getWahrheitserklaerung()
             );
             if (response == null) {
+                LOGGER.error("SOAP Service hat keine Antwort zurückgegeben.");
                 throw new NoMengenabgabeSoapResponseException();
             }
             if (!MITTEILUNG_WURDE_ERFOLGREICH_UEBERMITTELT.equals(response.getText())) {
+                LOGGER.error("Mengenabgabe-Soap-Anfrage wurde nicht bestätigt. Code: {}, Text: {}", response.getCode(), response.getText());
                 throw new MengenabgabeSoapRequestNotConfirmedException(response.getCode(), response.getText());
             }
         } catch (ServiceException e) {
+            LOGGER.error("Fehler beim Senden der Mengenabgabe-Soap-Anfrage: {}", e.getMessage());
             throw new MengenabgabeSoapRequestFailedException(e.getMessage());
         } finally {
             soapConcurrencyGuard.release();

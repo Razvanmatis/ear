@@ -2,7 +2,10 @@ package de.ear.utilities;
 
 import de.ear.model.Mengenabgabe;
 import de.ear.model.MengenabgabePage;
+import de.ear.services.GeraeteartenService;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +16,7 @@ import java.util.Set;
 
 public class MengenabgabeControllerUtilities {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MengenabgabeControllerUtilities.class);
     public static final int ZERO = 0;
     public static final int TWENTY = 20;
 
@@ -40,6 +44,7 @@ public class MengenabgabeControllerUtilities {
         for (int index = 0; index < sortTokens.size(); index++) {
             String property = sortTokens.get(index);
             if (!allowedProperties.contains(property)) {
+                LOGGER.error("Ungültiges Sortierfeld: {}", property);
                 throw new IllegalArgumentException(
                         "Ungültiges Sortierfeld: " + property);
             }

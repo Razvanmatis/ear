@@ -7,6 +7,8 @@ import de.ear.soap.generated.ServiceException;
 import de.ear.utilities.BasicAuthCredentials;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.ws.BindingProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
@@ -22,6 +24,7 @@ import java.util.Map;
 @Service
 public class SoapService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SoapService.class);
     private final MitteilungsServicePort port;
 
     public SoapService(MitteilungsServicePort port) {
@@ -65,6 +68,7 @@ public class SoapService {
                 RequestContextHolder.currentRequestAttributes()).getRequest();
         Authentication basic = new BasicAuthenticationConverter().convert(request);
         if (basic == null) {
+            LOGGER.error("Keine Basic Auth Credentials im Request gefunden.");
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                     "Authentifizierung erforderlich"
