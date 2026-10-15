@@ -94,6 +94,15 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Add Frontend Coverage Report Link to Summary
+        if: always()
+        run: |
+          echo "## 📊 Frontend Code Coverage" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "The Vitest HTML coverage report is available in the workflow artifacts." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "[📄 Download Frontend Coverage Report](#artifacts)" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Build frontend
         working-directory: frontend
         run: npm run build -- --configuration production
