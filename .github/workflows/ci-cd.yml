@@ -40,23 +40,28 @@ jobs:
         working-directory: backend
         run: mvn -B verify
 
-      - name: Upload JaCoCo Coverage Report
+      - name: Upload JaCoCo coverage report
+        id: upload-backend-coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-coverage-report
           path: backend/target/site/jacoco/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
 
-      - name: Add Coverage Report Link to Summary
+      - name: Add JaCoCo Report Link to Summary
         if: always()
+        env:
+          ARTIFACT_URL: ${{ steps.upload-backend-coverage.outputs.artifact-url }}
         run: |
           echo "## 📊 Backend Code Coverage" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "The JaCoCo HTML report is available in the workflow artifacts." >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "[📄 Download JaCoCo Coverage Report](#artifacts)" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$ARTIFACT_URL" ]; then
+            echo "[📄 Download JaCoCo Coverage Report]($ARTIFACT_URL)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "⚠️ Coverage artifact was not uploaded. Check the upload step in the workflow logs." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
   frontend-test:
     name: Frontend - Build & Tests
