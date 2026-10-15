@@ -86,22 +86,27 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload frontend coverage report
+        id: upload-frontend-coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
           path: frontend/coverage/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
 
       - name: Add Frontend Coverage Report Link to Summary
         if: always()
+        env:
+          ARTIFACT_URL: ${{ steps.upload-frontend-coverage.outputs.artifact-url }}
         run: |
           echo "## 📊 Frontend Code Coverage" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "The Vitest HTML coverage report is available in the workflow artifacts." >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "[📄 Download Frontend Coverage Report](#artifacts)" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$ARTIFACT_URL" ]; then
+            echo "[📄 Download Frontend Coverage Report]($ARTIFACT_URL)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "⚠️ Coverage artifact was not uploaded. Check the upload step in the workflow logs." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Build frontend
         working-directory: frontend
