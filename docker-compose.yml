@@ -1,8 +1,6 @@
 services:
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
+    image: ghcr.io/razvanmatis/ear-backend:latest
     environment:
       EAR_USERNAME: ${EAR_USERNAME:?Set EAR_USERNAME in your environment}
       EAR_PASSWORD: ${EAR_PASSWORD:?Set EAR_PASSWORD in your environment}
@@ -15,9 +13,7 @@ services:
       - app-network
 
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    image: ghcr.io/razvanmatis/ear-frontend:latest
     depends_on:
       - backend
     ports:
